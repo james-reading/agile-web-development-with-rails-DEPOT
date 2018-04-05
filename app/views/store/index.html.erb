@@ -3,6 +3,7 @@
 <% end %>
 
 <h1> Your Pragmatic Catalog </h1>
+<p>Views: <%= @counter %></p>
 
 <ul class="catalog">
   <% cache @products do %>
@@ -14,6 +15,7 @@
           <p><%= sanitize(product.description) %></p>
           <div class="price">
             <%= number_to_currency product.price, unit: "£" %>
+            <%= button_to 'Add to Cart', line_items_path(product_id: product) %>
           </div>
         </li>
       <% end %>
