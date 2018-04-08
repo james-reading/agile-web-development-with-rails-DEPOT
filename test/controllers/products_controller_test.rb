@@ -4,6 +4,7 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @product = products(:one)
     @title = "The Great Book #{rand(1000)}"
+    @image_url = '7apps.jpg'
   end
 
   test "should get index" do
@@ -28,7 +29,7 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
       post products_url, params: {
         product: {
           description: @product.description,
-          image_url: @product.image_url,
+          image_url: @image_url,
           price: @product.price,
           title: @title } }
     end
