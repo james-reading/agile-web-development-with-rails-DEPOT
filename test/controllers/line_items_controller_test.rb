@@ -58,7 +58,7 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_equal 1, @cart.line_items.count
-    assert_redirected_to cart_url(session[:cart_id])
+    assert_redirected_to store_index_url
   end
 
   test "should redirect to store when cart is empty" do

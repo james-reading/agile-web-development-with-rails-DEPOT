@@ -67,9 +67,11 @@ class LineItemsController < ApplicationController
       if LineItem.find_by_cart_id(@line_item.cart_id).nil?
         format.html { redirect_to store_index_url,
           notice: 'Your cart is currently empty' }
+        format.js { @hide_cart = true}
       else
-        format.html { redirect_to cart_url(session[:cart_id]),
+        format.html { redirect_to store_index_url,
           notice: 'Line item was successfully deleted.' }
+        format.js { @hide_cart = false}
       end
       format.json { head :no_content }
     end
