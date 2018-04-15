@@ -1,0 +1,12 @@
+<%= form_with(model: order, local: true) do |form| %>
+
+<div class="field">
+  <%= form.label :ship_date %>
+  <%= form.date_field :ship_date, id: :order_ship_date, size: 40 %>
+</div>
+
+<div class="actions">
+  <%= form.submit 'Update ship date'%>
+</div>
+
+<% end %>

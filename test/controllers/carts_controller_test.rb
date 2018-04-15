@@ -27,7 +27,7 @@ class CartsControllerTest < ActionDispatch::IntegrationTest
   test "should show cart" do
     post line_items_url, params: { product_id: products(:ruby).id}
     @cart = Cart.find(session[:cart_id])
-    
+
     get cart_url(@cart)
     assert_response :success
   end
@@ -71,4 +71,41 @@ class CartsControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to store_index_url
   end
+
+  test "Adding line item should reveal cart" do
+    get store_index_url
+
+    assert_select 'div#cart' do |element|
+      assert_select 'h2', count: 0
+    end
+
+    post line_items_url, params: { product_id: products(:ruby).id}
+
+    follow_redirect!
+
+    assert_select 'div#cart' do |element|
+      assert_select 'h2', 'Your Cart'
+    end
+  end
+
+  test "Destoying cart should hide cart" do
+    post line_items_url, params: { product_id: products(:ruby).id}
+    @cart = Cart.find(session[:cart_id])
+
+    follow_redirect!
+
+    assert_select 'div#cart' do |element|
+      assert_select 'h2', 'Your Cart'
+    end
+
+    delete cart_url(@cart)
+
+    follow_redirect!
+
+    assert_select 'div#cart' do |element|
+      assert_select 'h2', count: 0
+    end
+
+  end
+
 end

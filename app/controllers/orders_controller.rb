@@ -34,6 +34,7 @@ class OrdersController < ApplicationController
       if @order.save
         Cart.destroy(session[:cart_id])
         session[:cart_id] = nil
+        ChargeOrderJob.perform_later(@order, pay_type_params.to_h)
         format.html { redirect_to store_index_url,
               notice: 'Thank you for your order.' }
         format.json { render :show, status: :created, location: @order }
@@ -47,8 +48,15 @@ class OrdersController < ApplicationController
   # PATCH/PUT /orders/1
   # PATCH/PUT /orders/1.json
   def update
+    ship_date_previous = params[:ship_date]
     respond_to do |format|
       if @order.update(order_params)
+        puts "foobar"
+        puts ship_date_previous
+        puts @order.ship_date
+        puts params[:ship_date]
+        puts ship_date_previous == @order.ship_date
+        OrderMailer.shipped(@order).deliver_later unless ship_date_previous == @order.ship_date
         format.html { redirect_to @order, notice: 'Order was successfully updated.' }
         format.json { render :show, status: :ok, location: @order }
       else
@@ -68,18 +76,6 @@ class OrdersController < ApplicationController
     end
   end
 
-  def pay_type_params
-    if order_params[:pay_type] == "Credit Card"
-      params.require(:order).permit(:credit_card_number, :expiration_date)
-    elsif order_params[:pay_type] == "Check"
-      params.require(:order).permit(:routing_number, :account_number)
-    elsif order_params[:pay_type] == "Purchase Order"
-      params.require(:order).permit(:po_number)
-    else
-      {}
-    end
-  end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_order
@@ -88,7 +84,19 @@ class OrdersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def order_params
-      params.require(:order).permit(:name, :address, :email, :pay_type)
+      params.require(:order).permit(:name, :address, :email, :pay_type, :ship_date)
+    end
+
+    def pay_type_params
+      if order_params[:pay_type] == "Credit Card"
+        params.require(:order).permit(:credit_card_number, :expiration_date)
+      elsif order_params[:pay_type] == "Check"
+        params.require(:order).permit(:routing_number, :account_number)
+      elsif order_params[:pay_type] == "Purchase Order"
+        params.require(:order).permit(:po_number)
+      else
+        {}
+      end
     end
 
     def ensure_cart_isnt_empty

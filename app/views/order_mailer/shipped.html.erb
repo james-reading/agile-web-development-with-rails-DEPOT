@@ -1,0 +1,10 @@
+<h3> Pragmatic order Shipped</h3>
+
+<p>
+  This is just to let you know we shipped your recent order on <%= @order.ship_date %>
+</p>
+
+<table>
+  <tr><th>Qty</th><th>Description</th><th>Price</th></tr>
+<%= render @order.line_items -%>
+</table>

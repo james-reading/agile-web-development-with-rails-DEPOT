@@ -71,4 +71,5 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to store_index_url
   end
 
+  
 end
