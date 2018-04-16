@@ -1,5 +1,8 @@
 class OrdersController < ApplicationController
+
   include CurrentCart
+
+  skip_before_action :authorize, only: [:new, :create]
   before_action :set_cart, only: [:new, :create]
   before_action :ensure_cart_isnt_empty, only: :new
   before_action :set_order, only: [:show, :edit, :update, :destroy]
@@ -51,11 +54,6 @@ class OrdersController < ApplicationController
     ship_date_previous = params[:ship_date]
     respond_to do |format|
       if @order.update(order_params)
-        puts "foobar"
-        puts ship_date_previous
-        puts @order.ship_date
-        puts params[:ship_date]
-        puts ship_date_previous == @order.ship_date
         OrderMailer.shipped(@order).deliver_later unless ship_date_previous == @order.ship_date
         format.html { redirect_to @order, notice: 'Order was successfully updated.' }
         format.json { render :show, status: :ok, location: @order }

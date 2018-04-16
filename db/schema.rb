@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180415205037) do
+ActiveRecord::Schema.define(version: 20180416185355) do
 
   create_table "carts", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -30,8 +30,15 @@ ActiveRecord::Schema.define(version: 20180415205037) do
     t.index ["product_id"], name: "index_line_items_on_product_id"
   end
 
-# Could not dump table "orders" because of following StandardError
-#   Unknown type 'strign' for column 'ship_date'
+  create_table "orders", force: :cascade do |t|
+    t.string "name"
+    t.text "address"
+    t.string "email"
+    t.string "pay_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "ship_date"
+  end
 
   create_table "payment_types", force: :cascade do |t|
     t.string "name"
@@ -44,6 +51,13 @@ ActiveRecord::Schema.define(version: 20180415205037) do
     t.text "description"
     t.string "image_url"
     t.decimal "price"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "name"
+    t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
