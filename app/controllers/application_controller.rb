@@ -7,7 +7,8 @@ class ApplicationController < ActionController::Base
 
     def authorize
       if User.count.zero?
-        if !(request.path_parameters[:controller] == 'users' and request.path_parameters[:action] == 'new')
+        if !(request.path_parameters[:controller] == 'users' and
+            (request.path_parameters[:action] == 'new' or request.path_parameters[:action] == 'create'))
           flash[:notice] = "Please create Admin User"
           redirect_to controller: 'users', action: 'new'
         end
