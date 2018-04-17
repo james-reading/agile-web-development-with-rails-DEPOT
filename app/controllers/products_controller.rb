@@ -26,7 +26,6 @@ class ProductsController < ApplicationController
   # POST /products.json
   def create
     @product = Product.new(product_params)
-
     respond_to do |format|
       if @product.save
         format.html { redirect_to @product, notice: 'Product was successfully created.' }
@@ -35,7 +34,7 @@ class ProductsController < ApplicationController
         puts @product.errors.full_messages
         format.html { render :new }
         format.json { render json: @product.errors, status: :unprocessable_entity }
-      end
+      end      
     end
   end
 
