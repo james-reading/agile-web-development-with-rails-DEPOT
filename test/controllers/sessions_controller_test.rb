@@ -24,5 +24,11 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to store_index_url
   end
 
+  test "access to sensitive data requires login" do
+    delete logout_url
+    assert_redirected_to store_index_url
 
+    get products_url
+    assert_redirected_to login_url
+  end
 end
